@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, Plane, Hotel, DollarSign, Clock } from "lucide-react";
@@ -6,9 +5,10 @@ import type { Destination } from "@/types/travel";
 
 interface DestinationCardProps {
   destination: Destination;
+  onExplore: () => void;
 }
 
-const DestinationCard = ({ destination }: DestinationCardProps) => {
+const DestinationCard = ({ destination, onExplore }: DestinationCardProps) => {
   return (
     <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden">
       <div className="relative h-48 overflow-hidden">
@@ -107,7 +107,10 @@ const DestinationCard = ({ destination }: DestinationCardProps) => {
           </div>
         </div>
 
-        <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+        <Button 
+          onClick={onExplore}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+        >
           <MapPin className="mr-2 h-4 w-4" />
           Explore This Destination
         </Button>

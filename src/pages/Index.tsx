@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { MapPin, Plane, Hotel, Star, DollarSign } from "lucide-react";
 import MoodSelector from "@/components/MoodSelector";
 import PreferenceSelector from "@/components/PreferenceSelector";
 import DestinationCard from "@/components/DestinationCard";
+import DestinationDetails from "@/components/DestinationDetails";
 import { getRecommendations } from "@/utils/recommendationEngine";
 import type { UserPreferences, Destination } from "@/types/travel";
 
@@ -28,6 +28,7 @@ const Index = () => {
   });
   const [recommendations, setRecommendations] = useState<Destination[]>([]);
   const [showRecommendations, setShowRecommendations] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
 
   // Rotate background images every 5 seconds
   useEffect(() => {
@@ -41,6 +42,19 @@ const Index = () => {
     const results = getRecommendations(preferences);
     setRecommendations(results);
     setShowRecommendations(true);
+  };
+
+  const handleExploreDestination = (destination: Destination) => {
+    setSelectedDestination(destination);
+  };
+
+  const handleBackToRecommendations = () => {
+    setSelectedDestination(null);
+  };
+
+  const handleBackToPreferences = () => {
+    setShowRecommendations(false);
+    setSelectedDestination(null);
   };
 
   const canGetRecommendations = preferences.mood && preferences.budget && preferences.climate;
@@ -67,7 +81,12 @@ const Index = () => {
           </p>
         </div>
 
-        {!showRecommendations ? (
+        {selectedDestination ? (
+          <DestinationDetails 
+            destination={selectedDestination}
+            onBack={handleBackToRecommendations}
+          />
+        ) : !showRecommendations ? (
           <div className="max-w-4xl mx-auto">
             <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
               <CardHeader className="text-center">
@@ -107,7 +126,7 @@ const Index = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
               <Button 
-                onClick={() => setShowRecommendations(false)}
+                onClick={handleBackToPreferences}
                 variant="outline"
                 className="bg-white/90 backdrop-blur-sm border-white/50 text-gray-800 hover:bg-white"
               >
@@ -120,6 +139,7 @@ const Index = () => {
                 <DestinationCard 
                   key={index}
                   destination={destination}
+                  onExplore={() => handleExploreDestination(destination)}
                 />
               ))}
             </div>
